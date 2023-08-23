@@ -1,0 +1,340 @@
+<!--
+Copyright Jiaiq Liu
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
+
+    <groupId>org.bitbucket.jack20191124</groupId>
+    <artifactId>Alexander</artifactId>
+    <packaging>jar</packaging>
+    <version>1.1-SNAPSHOT</version>
+    <name>Alexander</name>
+    <url>https://bitbucket.org/jack20191124/alexander</url>
+
+    <developers>
+        <developer>
+            <name>Jiaiq Liu</name>
+            <url>https://bitbucket.org/jack20191124</url>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-jack20191124-Maven</id>
+            <name>jack20191124-Maven</name>
+            <url>https://api.bintray.com/maven/jack20191124/Maven/Alexander/;publish=1</url>
+        </repository>
+    </distributionManagement>
+
+    <scm>
+        <connection>scm:git:https://git@bitbucket.org:jack20191124/alexander.git</connection>
+        <developerConnection>scm:git:git@bitbucket.org:jack20191124/alexander.git</developerConnection>
+        <url>https://bitbucket.org/jack20191124/alexander</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.bitbucket.jack20191124</groupId>
+            <artifactId>Aristotle</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.6</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>commons-io</groupId>-->
+<!--            <artifactId>commons-io</artifactId>-->
+<!--            <version>2.6</version>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>net.jcip</groupId>
+            <artifactId>jcip-annotations</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.6</version>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+            <version>1.0-groovy-2.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.4.5</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Publish to artifactory -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>
+
+            <!-- Use Java 8 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <!-- Java Checkstyle -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.0.0</version>
+                <dependencies>
+                    <!-- override default checkstyle version -->
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>8.18</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <excludes>**/generated/**/*</excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <linkXRef>false</linkXRef>
+                            <encoding>UTF-8</encoding>
+                            <failsOnError>true</failsOnError>
+                            <consoleOutput>true</consoleOutput>
+                            <configLocation>checkstyle.xml</configLocation>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>4.6</version>
+                <configuration>
+                    <visitor>true</visitor>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>antlr4</id>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Groovy Spock -->
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>addSources</goal>
+                            <goal>addTestSources</goal>
+                            <goal>generateStubs</goal>
+                            <goal>compile</goal>
+                            <goal>generateTestStubs</goal>
+                            <goal>compileTests</goal>
+                            <goal>removeStubs</goal>
+                            <goal>removeTestStubs</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Groovy checkstyle -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>codenarc-maven-plugin</artifactId>
+                <version>0.22-1</version>
+                <configuration>
+                    <sourceDirectory>${project.basedir}</sourceDirectory>
+                    <maxPriority1Violations>0</maxPriority1Violations>
+                    <maxPriority2Violations>0</maxPriority2Violations>
+                    <maxPriority3Violations>0</maxPriority3Violations>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>codenarc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Unite Test -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.16</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <java.awt.headless>true</java.awt.headless>
+                    </systemPropertyVariables>
+                    <includes>
+                        <include>%regex[.*Spec.*]</include>
+                    </includes>
+                    <excludes>
+                        <exclude>%regex[.*ITSpec.*]</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <!-- primary artifact is shaded -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>LICENSE*</exclude>
+                                        <exclude>NOTICE*</exclude>
+                                        <exclude>META-INF/ASL2.0</exclude>
+                                        <exclude>META-INF/LICENSE.txt</exclude>
+                                        <exclude>META-INF/NOTICE.txt</exclude>
+                                        <exclude>META-INF/license/*</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>org.bitbucket.jack20191124.command.Main</mainClass>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- Enable HTML tags in Javadoc -->
+        <profile>
+            <id>disable-java8-doclint</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <doclint>none</doclint>
+            </properties>
+        </profile>
+    </profiles>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <reportSets>
+                    <!-- disable Javadoc qtl -->
+                    <reportSet>
+                        <id>default</id>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+                <configuration>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+
+                    <!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/tag-configuration.html -->
+                    <tags>
+                        <tag>
+                            <name>algorithm</name>
+                            <placement>a</placement>
+                            <head>Algorithm:</head>
+                        </tag>
+                        <tag>
+                            <name>test</name>
+                            <placement>a</placement>
+                            <head>Test:</head>
+                        </tag>
+                    </tags>
+
+                    <!-- https://maven.apache.org/plugins/maven-javadoc-plugin/examples/javadoc-resources.html -->
+                    <!-- https://stackoverflow.com/a/28849620 -->
+                    <javadocDirectory>${basedir}/src/main/javadoc/resources</javadocDirectory>
+                    <docfilessubdirs>true</docfilessubdirs>
+                </configuration>
+            </plugin>
+
+            <!-- unit tests report -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.19.1</version>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>
